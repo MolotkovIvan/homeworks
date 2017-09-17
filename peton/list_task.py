@@ -1,11 +1,8 @@
 def remove_adjacent(lst):
-    i = 0
-    while i < (len(lst)-1):
-        if lst[i] == lst[i+1]:
-            lst.pop(i+1)
-            i -= 1
-        i+=1
-    return lst
+    l = [lst[i] for i in range(len(lst)-1) if lst[i] != lst[i+1]]
+    if l[len(l)-1] != lst[len(lst)-1]:
+        l.append(lst[len(lst)-1])
+    return l
 
 
 def linear_merge(lst1, lst2):
@@ -13,13 +10,12 @@ def linear_merge(lst1, lst2):
     j = 0
     merged = []
     while i < len(lst1) and j < len(lst2):
-        if j < len(lst2) and i < len(lst1):
-            if lst1[i] < lst2[j]:
-                merged.append(lst1[i])
-                i+=1
-            else:
-                merged.append(lst2[j])
-                j+=1
+        if lst1[i] < lst2[j]:
+            merged.append(lst1[i])
+            i+=1
+        else:
+            merged.append(lst2[j])
+            j+=1
 
     while i < len(lst1):
         merged.append(lst1[i])
@@ -31,6 +27,7 @@ def linear_merge(lst1, lst2):
     return merged
 
 if __name__ = "__main__":
+#if True:
     s = input("Enter the sequence to be apllied remove_adjacent() to: ").split()
     lst = []
     for i in range(len(s)):
