@@ -19,7 +19,7 @@ def front_back(a,b):
 
 
 
-
-print(verbing(input()))
-print(not_bad(input()))
-print(front_back(input(), input()))
+if __name__ = "__main__":
+    print(verbing(input()))
+    print(not_bad(input()))
+    print(front_back(input(), input()))

@@ -28,11 +28,11 @@ def print_top(sorted_words):
     freq_sort = sorted(sorted_words.items(), key=lambda x:x[1], reverse=True)
     print(freq_sort[:20])
 
-
-filename = input("enter file name: ")
-words = read_words(filename)
-sorted_words = sort_words(words)
-print_words(sorted_words)
-print_top(sorted_words)
+if __name__ = "__main__":
+    filename = input("enter file name: ")
+    words = read_words(filename)
+    sorted_words = sort_words(words)
+    print_words(sorted_words)
+    print_top(sorted_words)
 
 

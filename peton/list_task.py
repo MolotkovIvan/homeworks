@@ -30,7 +30,7 @@ def linear_merge(lst1, lst2):
 
     return merged
 
-if 1==1:
+if __name__ = "__main__":
     s = input("Enter the sequence to be apllied remove_adjacent() to: ").split()
     lst = []
     for i in range(len(s)):
