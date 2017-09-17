@@ -7,8 +7,11 @@ def verbing(s):
 
 
 def not_bad(s):
-    if (s.find("not") != -1 and s.find("bad") != -1) and (s.find("not") < s.find("bad")):
-        return s[:s.find("not")] + "good" + s[s.find("bad")+3:]
+    not_loc = s.find("not")
+    bad_loc = s.find("bad")
+    
+    if (not_loc != -1 and bad_loc != -1) and (not_loc < bad_loc):
+        return s[:not_loc] + "good" + s[bad_loc+3:]
 
 
 def front_back(a,b):
