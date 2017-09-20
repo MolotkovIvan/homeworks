@@ -13,6 +13,7 @@ def read_words(filename):
 def sort_words(words):
     counted_words = {}
     for word in words:
+        word = word.lower()        
         if word not in counted_words:
             counted_words[word] = 1
         else:

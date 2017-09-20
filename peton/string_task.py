@@ -15,9 +15,9 @@ def not_bad(s):
 
 
 def front_back(a,b):
-    len_a = len(a)
-    len_b = len(b)    
-    return a[:(len_a + 1)//2] + b[:(len_b + 1)//2] + a[(len_a + 1)//2:] + b[(len_b + 1)//2:]
+    len_a = (len(a)+1)//2
+    len_b = (len(b)+1)//2    
+    return a[:len_a] + b[:len_b] + a[len_a:] + b[len_b:]
 
 
 #if True:
