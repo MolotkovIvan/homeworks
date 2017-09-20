@@ -15,10 +15,12 @@ def not_bad(s):
 
 
 def front_back(a,b):
-    return a[:(len(a) + 1)//2] + b[:(len(b) + 1)//2] + a[(len(a) + 1)//2:] + b[(len(b) + 1)//2:]
+    len_a = len(a)
+    len_b = len(b)    
+    return a[:(len_a + 1)//2] + b[:(len_b + 1)//2] + a[(len_a + 1)//2:] + b[(len_b + 1)//2:]
 
 
-
+#if True:
 if __name__ = "__main__":
     print(verbing(input()))
     print(not_bad(input()))
