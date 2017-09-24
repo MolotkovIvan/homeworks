@@ -5,11 +5,10 @@ from hashlib import sha1 as hasher
 
 
 def hashing(file_path):
-    while True:    
-        with open(file_path, mode='rb') as f:        
-            h = hasher()
-            h.update(f.read(2**10))
-            return h.hexdigest()    
+    with open(file_path, mode='rb') as f:        
+        h = hasher()
+        h.update(f.read(2**10))
+        return h.hexdigest()    
 
 
 def eq_files(catalog):
