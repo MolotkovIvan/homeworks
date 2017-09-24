@@ -12,35 +12,23 @@ def hashing(file_path):
 
 def eq_files(catalog):
     global all_files    
-    lst = os.listdir(catalog)    
-    for i in lst:
-        full_path = os.path.join(catalog, i)        
-        if os.path.isfile(full_path):
-            code = hashing(full_path)            
-            if code not in all_files:
-                all_files[code] = [1, [i], [catalog[len(start_path)+1:]]]                
-            else:
-                all_files[code][0] += 1;
-                all_files[code][1].append(i)                
-                all_files[code][2].append(catalog[len(start_path)+1:])
-        elif os.path.isdir(full_path):
-            eq_files(full_path)
-    
-
-all_files = {}
-start_path = input("enter top_dir ")
-eq_files(start_path)
-for a in all_files.items():
-    if a[1][0] > 1:
-        for i in range(a[1][0]-1):
-            if (a[1][2][i] == ''):
-                print(a[1][1][i], end=":")
-            else:
-                print(a[1][2][i] + "/" + a[1][1][i], end=":")
-        
-        if (a[1][2][a[1][0]-1] == ''):
-            print(a[1][1][a[1][0]-1])
+    for _, dirs, files in os.walk(catalog):
+        if (files[0] == "." or files[0] == "~"):
+            continue        
+        full_path = os.path.join(dirs, files)        
+        code = hashing(full_path)            
+        if code not in all_files:
+            all_files[code] = [full_path]                
         else:
-            print(a[1][2][a[1][0]-1] + "/" + a[1][1][a[1][0]-1])
-                                
-        print()    
+            all_files[code].append(full_path)
+    
+if __name__ == "__main__":
+#if True:
+    all_files = {}
+    start_path = input("enter top_dir ")
+    eq_files(start_path)
+    for a in all_files.items():
+        if len(a[1]) > 1:
+            for i in range(len(a[1])):
+                print(":".join(a[1]))             
+
