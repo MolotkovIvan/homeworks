@@ -18,9 +18,9 @@ def eq_files(catalog):
     all_files = {}
     for root, _, files in os.walk(catalog):
         for i in files:
-            if i[0] == '.' or i[0] == '~':
-                continue            
             full_path = os.path.join(root,i);
+            if i[0] == '.' or i[0] == '~' or os.path.islink(full_path):
+                continue            
             code = hashing(full_path)            
             if code not in all_files:
                 all_files[code] = [os.path.relpath(full_path, start_path)]                
