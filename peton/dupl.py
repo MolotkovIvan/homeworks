@@ -12,6 +12,7 @@ def hashing(file_path):
 
 
 def eq_files(catalog):
+    all_files = {}
     for root, _, files in os.walk(catalog):
         for i in files:
             full_path = os.path.join(root,i);
@@ -19,12 +20,13 @@ def eq_files(catalog):
             if code not in all_files:
                 all_files[code] = [os.path.relpath(full_path, start_path)]                
             else:
-                all_files[code].append(full_path[len(start_path)+1:])
+                all_files[code].append(os.path.relpath(full_path, start_path))
+    return all_files
+
+
 if __name__ == "__main__":
-    all_files = {}
 #    start_path = "/home/ivanmolotkov/Документы/lab02"    
     start_path = sys.argv[1]
-    eq_files(start_path)
-    for a in all_files.values():
+    for a in  eq_files(start_path).values():
         if len(a) > 1:
-            print(":".join(tuple(a)))
+            print(":".join(a))
