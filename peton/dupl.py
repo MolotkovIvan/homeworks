@@ -1,3 +1,4 @@
+import timeit
 import os
 import sys
 from hashlib import sha1 as hasher
@@ -7,7 +8,7 @@ def hashing(file_path):
     while True:    
         with open(file_path, mode='rb') as f:        
             h = hasher()
-            h.update(f.read(2**15))
+            h.update(f.read(2**10))
             return h.hexdigest()    
 
 
@@ -25,8 +26,8 @@ def eq_files(catalog):
 
 
 if __name__ == "__main__":
-#    start_path = "/home/ivanmolotkov/Документы/lab02"    
     start_path = sys.argv[1]
     for a in  eq_files(start_path).values():
         if len(a) > 1:
             print(":".join(a))
+#    print(timeit.timeit("eq_files(sys.argv[1])", setup="from __main__ import eq_files", number=1))
