@@ -1,17 +1,17 @@
-import timeit
+#import timeit
 import os
 import sys
 from hashlib import sha1 as hasher
 
 
 def hashing(file_path):
-    text = "~"    
+    text = b"~"    
     with open(file_path, mode='rb') as f:        
         h = hasher()
-        while text != "":
-            text = f.read(2**10)        
+        while text != b"":
+            text = f.read(2**15)        
             h.update(text)
-            return h.hexdigest()    
+        return h.hexdigest()    
 
 
 def eq_files(catalog):
