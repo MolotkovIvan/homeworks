@@ -11,17 +11,19 @@ def write_matrix(m):
         print(' '.join(map(str, row)))
 
 
+def split(m):
+    mv1, mv2 = np.vsplit(m, 2)
+    m11, m12 = np.hsplit(mv1, 2)
+    m21, m22 = np.hsplit(mv2, 2)
+    return m11, m12, m21, m22
+
+
 def strassen(a, b):
     if a.shape == (1, 1):
         return a * b
 
-    av = np.vsplit(a, 2)
-    a11, a12 = np.hsplit(av[0], 2)
-    a21, a22 = np.hsplit(av[1], 2)
-
-    bv = np.vsplit(b, 2)
-    b11, b12 = np.hsplit(bv[0], 2)
-    b21, b22 = np.hsplit(bv[1], 2)
+    a11, a12, a21, a22 = split(a)
+    b11, b12, b21, b22 = split(b)
 
     p1 = strassen(a11 + a22, b11 + b22)
     p2 = strassen(a21 + a22, b11)
@@ -38,12 +40,17 @@ def strassen(a, b):
 
     return np.vstack((np.hstack((c11, c12)),
                       np.hstack((c21, c22))))
-if __name__ == "__main__":
+
+def main():
     n = int(input())
     size = 2 ** (math.ceil(math.log2(n)))
     a = np.zeros((size, size), int)
-    a[0:n, 0:n] = read_matrix(n)
+    a[:n, :n] = read_matrix(n)
     b = np.zeros((size, size), int)
-    b[0:n, 0:n] = read_matrix(n)
+    b[:n, :n] = read_matrix(n)
     c = strassen(a, b)
-    write_matrix(c[0:n, 0:n])
+    write_matrix(c[:n, :n])
+
+
+if __name__ == "__main__":
+    main()
