@@ -45,7 +45,7 @@ def strassen(a, b):
     c = np.vstack((np.hstack((c11, c12)), np.hstack((c21, c22))))
     return c
 
-if __name__ = "__main__":
+if __name__ == "__main__":
     n = int(input())
     a = read_array(n)
     b = read_array(n)
