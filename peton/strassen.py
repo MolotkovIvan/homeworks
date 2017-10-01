@@ -5,6 +5,7 @@ import numpy as np
 def read_array(n):
     return np.array([list(map(int, input().split())) for _ in range(n)])
 
+
 def write_array(arr, n):
     arr = arr[0:n, 0:n]
     for i in arr:
