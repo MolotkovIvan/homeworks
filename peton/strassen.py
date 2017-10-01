@@ -41,6 +41,7 @@ def strassen(a, b):
     return np.vstack((np.hstack((c11, c12)),
                       np.hstack((c21, c22))))
 
+
 def main():
     n = int(input())
     size = 2 ** (math.ceil(math.log2(n)))
