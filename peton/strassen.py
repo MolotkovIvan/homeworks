@@ -10,8 +10,8 @@ def read_array(n):
 
 
 def write_array(arr):
-    for i in range(len(arr)):
-        print(' '.join([str(int(j)) for j in arr[i]]))
+    for i in arr:
+        print(' '.join([str(int(j)) for j in i]))
 
 
 def quartering(m):
@@ -44,7 +44,6 @@ def strassen(a, b):
 
     c = np.vstack((np.hstack((c11, c12)), np.hstack((c21, c22))))
     return c
-
 
 if __name__ = "__main__":
     n = int(input())
