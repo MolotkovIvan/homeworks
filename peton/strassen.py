@@ -8,28 +8,16 @@ def strassen(a, b):
 	
 	size = len(a)//2
 
-	a11 = np.zeros((size, size))
-	a12 = np.zeros((size, size))
-	a21 = np.zeros((size, size))
-	a22 = np.zeros((size, size))
+	a11 = a[0:size, 0:size]
+	a12 = a[0:size, size:size*2]
+	a21 = a[size:size*2, 0:size]
+	a22 = a[size:size*2, size:size*2]
 
-	b11 = np.zeros((size, size))
-	b12 = np.zeros((size, size))
-	b21 = np.zeros((size, size))
-	b22 = np.zeros((size, size))
+	b11 = b[0:size, 0:size]
+	b12 = b[0:size, size:size*2]
+	b21 = b[size:size*2, 0:size]
+	b22 = b[size:size*2, size:size*2]
 
-	for i in range(size):
-		for j in range(size):
-			a11[i][j] = a[i][j]
-			a12[i][j] = a[i][j+size]
-			a21[i][j] = a[i+size][j]
-			a22[i][j] = a[i+size][j+size]
-
-			b11[i][j] = b[i][j]
-			b12[i][j] = b[i][j+size]
-			b21[i][j] = b[i+size][j]
-			b22[i][j] = b[i+size][j+size]
-	
 	p1 = strassen(a11 + a22, b11 + b22)#(a11 + a22)(b11+b22)
 	p2 = strassen(a21 + a22, b11)#(a21 + a22)(b11)
 	p3 = strassen(a11, b12 - b22)#a11(b12-b22)
@@ -42,13 +30,7 @@ def strassen(a, b):
 	c12 = p3 + p5 #p3 + p5
 	c21 = p2 + p4 #p2 + p4
 	c22 = p1 - p2 + p3 + p6#p1 - p2 + p3 + p6
-	c = np.zeros((size*2, size*2))
-	for i in range(size):
-		for j in range(size):
-			c[i][j] = c11[i][j]
-			c[i][j+size] = c12[i][j]
-			c[i+size][j] = c21[i][j]
-			c[i+size][j+size] = c22[i][j]
+	c = np.vstack((np.hstack((c11,c12)), np.hstack((c21, c22))))
 	return(c)
 
 
@@ -71,7 +53,6 @@ for i in range(n):
 		b[i][j] = int(q[j]);
 
 c = strassen(a, b)
-for i in range(n):
-	for j in range(n):
-		print(int(c[i][j]), end=" ")
-	print()
+c = c[0:n, 0:n]
+for i in range(len(c)):
+	print(' '.join([str(int(j)) for j in c[i]]))
