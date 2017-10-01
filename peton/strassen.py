@@ -71,4 +71,7 @@ for i in range(n):
 		b[i][j] = int(q[j]);
 
 c = strassen(a, b)
-print(c)
+for i in range(n):
+	for j in range(n):
+		print(int(c[i][j]), end=" ")
+	print()
