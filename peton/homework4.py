@@ -44,7 +44,7 @@ class Function:
         return self.args
 
     def get_expr(self):
-        return self.expr
+        return self.body
 
 
 class FunctionDefinition:
