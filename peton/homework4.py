@@ -117,8 +117,8 @@ class BinaryOperation:
         self.rhs = rhs
 
     def evaluate(self, scope):
-        l = scope[self.lhs].get_value()
-        r = scope[self.rhs].get_value()
+        l = scope[self.lhs.evaluate(scope)].get_value()
+        r = scope[self.rhs.evaluate(scope)].get_value()
         if self.op == "+":
             return Number(l + r)
         if self.op == "-":
