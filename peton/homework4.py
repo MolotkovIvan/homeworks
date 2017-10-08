@@ -8,8 +8,6 @@ class Scope:
             return self.values[key]
         elif self.parent is not None:
             return self.parent[key]
-        else:
-            return ""
 
     def __setitem__(self, key, value):
         self.values[key] = value
