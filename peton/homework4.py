@@ -64,8 +64,9 @@ class Conditional:
         if (self.condition).evaluate(scope) != Number(0) and
         len(self.if_true) != 0:
             return self.if_true[len(self.if_true)-1].evaluate(scope)
-        elif self.if_false is not None and len(self.if_false) != 0:
-            return self.if_false[len(self.if_false)-1].evaluate(scope)
+        elif self.if_false is not None:
+            if len(self.if_false) != 0:
+                return self.if_false[len(self.if_false)-1].evaluate(scope)
 
 
 class Print:
