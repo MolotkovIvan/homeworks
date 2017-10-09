@@ -61,9 +61,9 @@ class Conditional:
         self.if_false = if_false
 
     def evaluate(self, scope):
-        if (self.condition).evaluate(scope) != Number(0) and
-        len(self.if_true) != 0:
-            return self.if_true[len(self.if_true)-1].evaluate(scope)
+        if (self.condition).evaluate(scope) != Number(0):
+            if len(self.if_true) != 0:
+                return self.if_true[len(self.if_true)-1].evaluate(scope)
         elif self.if_false is not None:
             if len(self.if_false) != 0:
                 return self.if_false[len(self.if_false)-1].evaluate(scope)
@@ -187,3 +187,25 @@ class UnaryOperation:
                 return Number(1)
             else:
                 return Number(0)
+
+s = Scope()
+Read("a").evaluate(s)
+Read("b").evaluate(s)
+Print(UnaryOperation("-", BinaryOperation(Reference("a"), "+", Reference("b")))).evaluate(s)
+Print(Conditional(Number(5), [BinaryOperation(Reference("a"), "*", Reference("b"))], [Number(4)])).evaluate(s)
+
+operation1 = FunctionDefinition("foo", Function(["a", "b"],
+  [
+    Print(BinaryOperation(Reference("a"), "+", Reference("b"))),
+    BinaryOperation(Reference("a"), "+", Reference("b"))
+  ]
+))
+
+operation2 = FunctionCall(Reference("foo"), [
+  Number(1),
+  BinaryOperation(Number(2), "+", Number(3))
+])
+
+s = Scope()
+operation1.evaluate(s)
+operation2.evaluate(s)
