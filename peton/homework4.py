@@ -187,25 +187,3 @@ class UnaryOperation:
                 return Number(1)
             else:
                 return Number(0)
-
-s = Scope()
-Read("a").evaluate(s)
-Read("b").evaluate(s)
-Print(UnaryOperation("-", BinaryOperation(Reference("a"), "+", Reference("b")))).evaluate(s)
-Print(Conditional(Number(5), [BinaryOperation(Reference("a"), "*", Reference("b"))], [Number(4)])).evaluate(s)
-
-operation1 = FunctionDefinition("foo", Function(["a", "b"],
-  [
-    Print(BinaryOperation(Reference("a"), "+", Reference("b"))),
-    BinaryOperation(Reference("a"), "+", Reference("b"))
-  ]
-))
-
-operation2 = FunctionCall(Reference("foo"), [
-  Number(1),
-  BinaryOperation(Number(2), "+", Number(3))
-])
-
-s = Scope()
-operation1.evaluate(s)
-operation2.evaluate(s)
