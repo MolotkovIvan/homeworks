@@ -100,7 +100,7 @@ class FunctionCall:
             call_scope[args_name[i]] = (self.args)[i].evaluate(scope)
         for exp in expressions[:-1]:
             exp.evaluate(call_scope)
-        return expressions[-1]
+        return expressions[-1].evaluate(call_scope)
 
 
 class Reference:
