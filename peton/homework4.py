@@ -124,32 +124,7 @@ class BinaryOperation:
     def evaluate(self, scope):
         l = self.lhs.evaluate(scope).value
         r = self.rhs.evaluate(scope).value
-        if self.op == "+":
-            return Number(l + r)
-        if self.op == "-":
-            return Number(l - r)
-        if self.op == "*":
-            return Number(l * r)
-        if self.op == "/":
-            return Number(l // r)
-        if self.op == "%":
-            return Number(l % r)
-        if self.op == "==":
-            return Number(int(l == r))
-        if self.op == "!=":
-            return Number(int(l != r))
-        if self.op == "<":
-            return Number(int(l < r))
-        if self.op == ">":
-            return Number(int(l > r))
-        if self.op == "<=":
-            return Number(int(l <= r))
-        if self.op == ">=":
-            return Number(int(l >= r))
-        if self.op == "&&":
-            return Number(int((l == 0 and r == 0) or l*r != 0))
-        if self.op == "||":
-            return Number(int(l != 0 or r != 0))
+        return bin_op[self.op](l, r)
 
 
 class UnaryOperation:
@@ -159,10 +134,22 @@ class UnaryOperation:
 
     def evaluate(self, scope):
         res = self.expr.evaluate(scope).value
-        if self.op == "-":
-            return Number(-res)
-        if self.op == "!":
-            if res == 0:
-                return Number(1)
-            else:
-                return Number(0)
+        return un_op[self.op](res)
+
+
+bin_op = {'+': lambda x, y: Number(x + y),
+          '-': lambda x, y: Number(x - y),
+          '*': lambda x, y: Number(x * y),
+          '/': lambda x, y: Number(x // y),
+          '%': lambda x, y: Number(x % y),
+          '==': lambda x, y: Number(int(x == y)),
+          '!=': lambda x, y: Number(int(x != y)),
+          '<': lambda x, y: Number(int(x < y)),
+          '>': lambda x, y: Number(int(x > y)),
+          '<=': lambda x, y: Number(int(x <= y)),
+          '>=': lambda x, y: Number(int(x >= y)),
+          '&&': lambda x, y: Number(int((x == 0 and y == 0) or x * y != 0)),
+          '||': lambda x, y: Number(int(x != 0 or y != 0))}
+
+un_op = {'-': lambda x: Number(-x),
+         '!': lambda x: Number(int(x * x == 0))}
