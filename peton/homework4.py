@@ -94,8 +94,9 @@ class FunctionCall:
         expressions = func.body
         for i in range(len(self.args)):
             call_scope[args_name[i]] = (self.args)[i].evaluate(scope)
-        for i in range(len(expressions)):
-            expressions[i] = expressions[i].evaluate(call_scope)
+        print(call_scope.values)
+        for exp in expressions[:-1]:
+            exp.evaluate(call_scope)
         return expressions[-1]
 
 
@@ -182,29 +183,3 @@ class UnaryOperation:
                 return Number(1)
             else:
                 return Number(0)
-
-s = Scope()
-Read("a").evaluate(s)
-Read("b").evaluate(s)
-Print(UnaryOperation("-", BinaryOperation(Reference("a"), "+", Reference("b")))).evaluate(s)
-Print(Conditional(Number(0), [BinaryOperation(Reference("a"), "*", Reference("b"))], [Number(4)])).evaluate(s)
-
-operation1 = FunctionDefinition("foo", Function(["a", "b"],
-  [
-    Print(BinaryOperation(Reference("a"), "+", Reference("b"))),
-    BinaryOperation(Reference("a"), "+", Reference("b"))
-  ]
-))
-
-operation2 = FunctionCall(Reference("foo"), [
-  Number(1),
-  BinaryOperation(Number(2), "+", Number(3))
-])
-#operation3 = FunctionCall(Reference("foo"), [
-#  Number(1),
-#  BinaryOperation(Number(2), "+", Number(3))
-#])
-
-operation1.evaluate(s)
-operation2.evaluate(s)
-operation2.evaluate(s)
