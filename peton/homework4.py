@@ -46,13 +46,13 @@ class FunctionDefinition:
         return self.function
 
 
-def evaluate(lst, scope):
-    if len(lst) == 0 or lst is None:
+def evaluate(expressions, scope):
+    if len(expressions) == 0 or expressions is None:
         return Number(-1)
     else:
-        for expr in lst[:-1]:
+        for expr in expressions[:-1]:
             expr.evaluate(scope)
-        return lst[-1].evaluate(scope)
+        return expressions[-1].evaluate(scope)
 
 
 class Conditional:
