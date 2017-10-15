@@ -53,12 +53,16 @@ class Conditional:
 
     def evaluate(self, scope):
         if (self.condition).evaluate(scope) != Number(0):
-            if self.if_true is not None and len(self.if_true) != 0:
+            if self.if_true is None or len(self.if_true) == 0:
+                return Number(-1)
+            else:
                 for expr in self.if_true[:-1]:
                     expr.evaluate(scope)
                 return self.if_true[-1].evaluate(scope)
-        elif self.if_false is not None:
-            if len(self.if_false) != 0:
+        else:
+            if self.if_false is None or len(self.if_false) == 0:
+                return Number(-1)
+            else:
                 for expr in self.if_false[:-1]:
                     expr.evaluate(scope)
                 return self.if_false[-1].evaluate(scope)
@@ -94,7 +98,6 @@ class FunctionCall:
         expressions = func.body
         for i in range(len(self.args)):
             call_scope[args_name[i]] = (self.args)[i].evaluate(scope)
-        print(call_scope.values)
         for exp in expressions[:-1]:
             exp.evaluate(call_scope)
         return expressions[-1]
