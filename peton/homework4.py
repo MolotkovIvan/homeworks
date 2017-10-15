@@ -46,10 +46,13 @@ class FunctionDefinition:
         return self.function
 
 
-def compute(list, scope):
-    for expr in list[:-1]:
-        expr.evaluate(scope)
-    return list[-1].evaluate(scope)
+def evaluate(lst, scope):
+    if len(lst) == 0 or lst is None:
+        return Number(-1)
+    else:
+        for expr in lst[:-1]:
+            expr.evaluate(scope)
+        return lst[-1].evaluate(scope)
 
 
 class Conditional:
@@ -60,15 +63,9 @@ class Conditional:
 
     def evaluate(self, scope):
         if self.condition.evaluate(scope) != Number(0):
-            if self.if_true is None or len(self.if_true) == 0:
-                return Number(-1)
-            else:
-                return compute(self.if_true, scope)
+            return evaluate(self.if_true, scope)
         else:
-            if self.if_false is None or len(self.if_false) == 0:
-                return Number(-1)
-            else:
-                return compute(self.if_false, scope)
+            return evaluate(self.if_false, scope)
 
 
 class Print:
@@ -99,12 +96,9 @@ class FunctionCall:
     def evaluate(self, scope):
         func = self.fun_expr.evaluate(scope)
         call_scope = Scope(scope)
-        if len(func.body) == 0 or func.body is None:
-            return Number(-1)
-        else:
-            for key, value in zip(func.args, self.args):
-                call_scope[key] = value.evaluate(scope)
-            return compute(func.body, call_scope)
+        for key, value in zip(func.args, self.args):
+            call_scope[key] = value.evaluate(scope)
+        return evaluate(func.body, call_scope)
 
 
 class Reference:
@@ -148,8 +142,8 @@ bin_op = {'+': lambda x, y: Number(x + y),
           '>': lambda x, y: Number(int(x > y)),
           '<=': lambda x, y: Number(int(x <= y)),
           '>=': lambda x, y: Number(int(x >= y)),
-          '&&': lambda x, y: Number(int((x == 0 and y == 0) or x * y != 0)),
-          '||': lambda x, y: Number(int(x != 0 or y != 0))}
+          '&&': lambda x, y: Number(int((x and y) != 0)),
+          '||': lambda x, y: Number(int((x or y) != 0))}
 
 un_op = {'-': lambda x: Number(-x),
          '!': lambda x: Number(int(x * x == 0))}
