@@ -96,8 +96,9 @@ class FunctionCall:
     def evaluate(self, scope):
         func = self.fun_expr.evaluate(scope)
         call_scope = Scope(scope)
-        for key, value in zip(func.args, self.args):
-            call_scope[key] = value.evaluate(scope)
+        if len(func.args) != 0 or func.args is not None:
+            for key, value in zip(func.args, self.args):
+                call_scope[key] = value.evaluate(scope)
         return evaluate(func.body, call_scope)
 
 
