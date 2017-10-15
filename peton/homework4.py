@@ -43,6 +43,7 @@ class FunctionDefinition:
 
     def evaluate(self, scope):
         scope[self.name] = self.function
+        return self.function
 
 
 class Conditional:
@@ -83,7 +84,9 @@ class Read:
         self.name = name
 
     def evaluate(self, scope):
-        scope[self.name] = Number(int(input()))
+        num = Number(int(input()))
+        scope[self.name] = num
+        return num
 
 
 class FunctionCall:
