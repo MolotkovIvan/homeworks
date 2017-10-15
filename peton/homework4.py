@@ -6,7 +6,7 @@ class Scope:
     def __getitem__(self, key):
         if key in self.values:
             return self.values[key]
-        elif self.parent is not None:
+        else:
             return self.parent[key]
 
     def __setitem__(self, key, value):
@@ -46,6 +46,12 @@ class FunctionDefinition:
         return self.function
 
 
+def compute(list, scope):
+    for expr in list[:-1]:
+        expr.evaluate(scope)
+    return list[-1].evaluate(scope)
+
+
 class Conditional:
     def __init__(self, condition, if_true, if_false=None):
         self.condition = condition
@@ -53,20 +59,16 @@ class Conditional:
         self.if_false = if_false
 
     def evaluate(self, scope):
-        if (self.condition).evaluate(scope) != Number(0):
+        if self.condition.evaluate(scope) != Number(0):
             if self.if_true is None or len(self.if_true) == 0:
                 return Number(-1)
             else:
-                for expr in self.if_true[:-1]:
-                    expr.evaluate(scope)
-                return self.if_true[-1].evaluate(scope)
+                return compute(self.if_true, scope)
         else:
             if self.if_false is None or len(self.if_false) == 0:
                 return Number(-1)
             else:
-                for expr in self.if_false[:-1]:
-                    expr.evaluate(scope)
-                return self.if_false[-1].evaluate(scope)
+                return compute(self.if_false, scope)
 
 
 class Print:
@@ -74,7 +76,7 @@ class Print:
         self.expr = expr
 
     def evaluate(self, scope):
-        result = (self.expr).evaluate(scope)
+        result = self.expr.evaluate(scope)
         print(result.value)
         return result
 
@@ -97,16 +99,12 @@ class FunctionCall:
     def evaluate(self, scope):
         func = self.fun_expr.evaluate(scope)
         call_scope = Scope(scope)
-        args_name = func.args
-        expressions = func.body
-        if len(expressions) == 0 or expressions is None:
+        if len(func.body) == 0 or func.body is None:
             return Number(-1)
         else:
-            for i in range(len(self.args)):
-                call_scope[args_name[i]] = (self.args)[i].evaluate(scope)
-            for exp in expressions[:-1]:
-                exp.evaluate(call_scope)
-            return expressions[-1].evaluate(call_scope)
+            for key, value in zip(func.args, self.args):
+                call_scope[key] = value.evaluate(scope)
+            return compute(func.body, call_scope)
 
 
 class Reference:
@@ -186,7 +184,7 @@ class UnaryOperation:
     def evaluate(self, scope):
         res = self.expr.evaluate(scope).value
         if self.op == "-":
-            return Number(res * (-1))
+            return Number(-res)
         if self.op == "!":
             if res == 0:
                 return Number(1)
