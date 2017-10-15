@@ -26,9 +26,6 @@ class Number:
     def __hash__(self):
         return hash(self.value)
 
-    def get_value(self):
-        return self.value
-
 
 class Function:
     def __init__(self, args, body):
@@ -37,12 +34,6 @@ class Function:
 
     def evaluate(self, scope):
         return self
-
-    def get_args(self):
-        return self.args
-
-    def get_expr(self):
-        return self.body
 
 
 class FunctionDefinition:
@@ -62,11 +53,15 @@ class Conditional:
 
     def evaluate(self, scope):
         if (self.condition).evaluate(scope) != Number(0):
-            if len(self.if_true) != 0:
-                return self.if_true[len(self.if_true)-1].evaluate(scope)
+            if self.if_true is not None and len(self.if_true) != 0:
+                for expr in self.if_true[:-1]:
+                    expr.evaluate(scope)
+                return self.if_true[-1].evaluate(scope)
         elif self.if_false is not None:
             if len(self.if_false) != 0:
-                return self.if_false[len(self.if_false)-1].evaluate(scope)
+                for expr in self.if_false[:-1]:
+                    expr.evaluate(scope)
+                return self.if_false[-1].evaluate(scope)
 
 
 class Print:
@@ -75,7 +70,7 @@ class Print:
 
     def evaluate(self, scope):
         result = (self.expr).evaluate(scope)
-        print(result.get_value())
+        print(result.value)
         return result
 
 
@@ -95,13 +90,17 @@ class FunctionCall:
     def evaluate(self, scope):
         func = self.fun_expr.evaluate(scope)
         call_scope = Scope(scope)
-        args_name = func.get_args()
-        expressions = func.get_expr()
+        args_name = func.args
+        expressions = func.body
+        for exp in expressions:
+            print(exp, end=" ")
         for i in range(len(self.args)):
             call_scope[args_name[i]] = (self.args)[i].evaluate(scope)
         for i in range(len(expressions)):
             expressions[i] = expressions[i].evaluate(call_scope)
-        return expressions[len(expressions) - 1]
+        for exp in expressions:
+            print(exp.value, end=" ")
+        return expressions[-1]
 
 
 class Reference:
@@ -119,8 +118,8 @@ class BinaryOperation:
         self.rhs = rhs
 
     def evaluate(self, scope):
-        l = self.lhs.evaluate(scope).get_value()
-        r = self.rhs.evaluate(scope).get_value()
+        l = self.lhs.evaluate(scope).value
+        r = self.rhs.evaluate(scope).value
         if self.op == "+":
             return Number(l + r)
         if self.op == "-":
@@ -179,7 +178,7 @@ class UnaryOperation:
         self.expr = expr
 
     def evaluate(self, scope):
-        res = self.expr.evaluate(scope).get_value()
+        res = self.expr.evaluate(scope).value
         if self.op == "-":
             return Number(res * (-1))
         if self.op == "!":
@@ -187,3 +186,29 @@ class UnaryOperation:
                 return Number(1)
             else:
                 return Number(0)
+
+s = Scope()
+Read("a").evaluate(s)
+Read("b").evaluate(s)
+Print(UnaryOperation("-", BinaryOperation(Reference("a"), "+", Reference("b")))).evaluate(s)
+Print(Conditional(Number(0), [BinaryOperation(Reference("a"), "*", Reference("b"))], [Number(4)])).evaluate(s)
+
+operation1 = FunctionDefinition("foo", Function(["a", "b"],
+  [
+    Print(BinaryOperation(Reference("a"), "+", Reference("b"))),
+    BinaryOperation(Reference("a"), "+", Reference("b"))
+  ]
+))
+
+operation2 = FunctionCall(Reference("foo"), [
+  Number(1),
+  BinaryOperation(Number(2), "+", Number(3))
+])
+#operation3 = FunctionCall(Reference("foo"), [
+#  Number(1),
+#  BinaryOperation(Number(2), "+", Number(3))
+#])
+
+operation1.evaluate(s)
+operation2.evaluate(s)
+operation2.evaluate(s)
