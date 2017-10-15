@@ -135,45 +135,21 @@ class BinaryOperation:
         if self.op == "%":
             return Number(l % r)
         if self.op == "==":
-            if l == r:
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(int(l == r))
         if self.op == "!=":
-            if l != r:
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(int(l != r))
         if self.op == "<":
-            if l < r:
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(int(l < r))
         if self.op == ">":
-            if l > r:
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(int(l > r))
         if self.op == "<=":
-            if l <= r:
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(int(l <= r))
         if self.op == ">=":
-            if l >= r:
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(int(l >= r))
         if self.op == "&&":
-            if l != 0 and r != 0:
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(int((l == 0 and r == 0) or l*r != 0))
         if self.op == "||":
-            if l != 0 or r != 0:
-                return Number(1)
-            else:
-                return Number(0)
+            return Number(int(l != 0 or r != 0))
 
 
 class UnaryOperation:
