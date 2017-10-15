@@ -92,14 +92,10 @@ class FunctionCall:
         call_scope = Scope(scope)
         args_name = func.args
         expressions = func.body
-        for exp in expressions:
-            print(exp, end=" ")
         for i in range(len(self.args)):
             call_scope[args_name[i]] = (self.args)[i].evaluate(scope)
         for i in range(len(expressions)):
             expressions[i] = expressions[i].evaluate(call_scope)
-        for exp in expressions:
-            print(exp.value, end=" ")
         return expressions[-1]
 
 
