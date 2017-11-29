@@ -12,12 +12,12 @@ drop' 0 xs = xs
 drop' _ [] = []
 drop' n (x:xs) = drop' (n-1) (xs)
 
-filter' f (x:xs) | f x == True  = x:(filter' f xs)
-                 | otherwise    = filter' f xs
-filter' f [] = []
+filter' f (x:xs) | f x       = x:(filter' f xs)
+                 | otherwise = filter' f xs
+filter' _ [] = []
 
 foldl' f n (x:xs) = foldl' f (f n x) xs
-foldl' f n [] = n
+foldl' _ n [] = n
 
 len' xs = len'' 0 xs
     where
