@@ -1,7 +1,7 @@
 tail' (_:xs) = xs
-tail' _ = []
+tail' [] = []
 
-head' (x:xs) = x
+head' (x:_) = x
 
 take' 0 _ = []
 take' _ [] = []
@@ -13,18 +13,13 @@ drop' n (x:xs) = drop' (n-1) (xs)
 
 filter' f (x:xs) | f x       = x:(filter' f xs)
                  | otherwise = filter' f xs
-filter' _ _ = []
+filter' _ [] = []
 
 foldl' f n (x:xs) = foldl' f (f n x) xs
-foldl' _ n _ = n
+foldl' _ n [] = n
 
-concat' xs ys = foldr' (:) ys xs
-    where
-        foldr' f a (x:xs) = f x (foldr f a xs)
-        foldr' _ a _ = a 
+concat' (x:xs) ys = x:(concat' xs ys)
+concat' [] ys = ys
 
-concat'' (x:xs) ys = (:) x (concat'' xs ys)
-concat'' _ ys = ys
-
-qsort' [] = []
-qsort' (x:xs) = concat'' (qsort' (filter' (<x) xs)) (x:(qsort'(filter (>= x) xs)))
+quickSort' [] = []
+quickSort' (x:xs) = concat' (quickSort' (filter' (<x) xs)) (x:(quickSort' (filter (>= x) xs) ))
