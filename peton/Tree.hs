@@ -14,14 +14,14 @@ insert x y Nil = Node x y Nil Nil
 
 delete x (Node k v l r) | x > k     = Node k v l (delete x r)  
                         | x < k     = Node k v (delete x l) r
-                        | otherwise = order l r
-                            where
-                                order l Nil = l
-                                order Nil r = r
-                                order l r = Node (getKey (mostleft r)) (getValue (mostleft r)) l (delete (getKey (mostleft r)) r)
-                                    where
-                                        mostleft (Node k v Nil r) = (Node k v Nil r)
-                                        mostleft (Node _ _ l _) = mostleft l
-                                        getKey (Node k _ _ _) = k
-                                        getValue (Node _ v _ _) = v
+                        | otherwise = join l r
+    where
+        join l Nil = l
+        join Nil r = r
+        join l r = Node (getKey (leftmost r)) (getValue (leftmost r)) l (delete (getKey (leftmost r)) r)
+            where
+                leftmost (Node k v Nil r) = (Node k v Nil r)
+                leftmost (Node _ _ l _) = leftmost l
+                getKey (Node k _ _ _) = k
+                getValue (Node _ v _ _) = v
 delete _ Nil = Nil
