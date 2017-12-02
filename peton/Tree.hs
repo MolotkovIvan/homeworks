@@ -18,8 +18,11 @@ delete x (Node k v l r) | x > k     = Node k v l (delete x r)
     where
         join l Nil = l
         join Nil r = r
-        join l r = Node (getKey (leftmost r)) (getValue (leftmost r)) l (delete (getKey (leftmost r)) r)
+        join l r = Node k' v' l r'
             where
+                k' = getKey (leftmost r)
+                v' = getValue (leftmost r)
+                r' = delete (getKey (leftmost r)) r
                 leftmost (Node k v Nil r) = (Node k v Nil r)
                 leftmost (Node _ _ l _) = leftmost l
                 getKey (Node k _ _ _) = k
