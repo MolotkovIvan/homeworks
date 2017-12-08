@@ -19,10 +19,8 @@ delete x (Node k v l r)
     where
         join l Nil = l
         join Nil r = r
-        join l r = Node k' v' l r'
-            where
-                (k', v') = leftmost r
-                r' = delete k' r
-                leftmost (Node k v Nil r) = (k, v)
-                leftmost (Node _ _ l _) = leftmost l
+        join l r = Node k' v' l (delete k' r)
+        (k', v') = leftmost r
+        leftmost (Node k v Nil r) = (k, v)
+        leftmost (Node _ _ l _) = leftmost l
 delete _ Nil = Nil
