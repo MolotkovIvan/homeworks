@@ -20,11 +20,8 @@ delete x (Node k v l r) | x > k     = Node k v l (delete x r)
         join Nil r = r
         join l r = Node k' v' l r'
             where
-                k' = getKey (leftmost r)
-                v' = getValue (leftmost r)
-                r' = delete (getKey (leftmost r)) r
-                leftmost (Node k v Nil r) = (Node k v Nil r)
+                k' v' = leftmost r
+                r' = delete k' r
+                leftmost (Node k v Nil r) = k v
                 leftmost (Node _ _ l _) = leftmost l
-                getKey (Node k _ _ _) = k
-                getValue (Node _ v _ _) = v
 delete _ Nil = Nil
