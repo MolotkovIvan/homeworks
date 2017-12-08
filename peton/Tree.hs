@@ -12,10 +12,12 @@ insert x y (Node k v l r) | x > k     = Node k v l (insert x y r)
                           | otherwise = Node x y l r
 insert x y Nil = Node x y Nil Nil
 
-delete x (Node k v l r) | x > k     = Node k v l (delete x r)  
-                        | x < k     = Node k v (delete x l) r
-                        | otherwise = join l r
+delete x (Node k v l r) 
+    | x > k     = Node k v l (delete x r)  
+    | x < k     = Node k v (delete x l) r
+    | otherwise = join l r
     where
+        join l Nil = l
         join Nil r = r
         join l r = Node k' v' l r'
             where
