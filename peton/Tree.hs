@@ -16,12 +16,11 @@ delete x (Node k v l r) | x > k     = Node k v l (delete x r)
                         | x < k     = Node k v (delete x l) r
                         | otherwise = join l r
     where
-        join l Nil = l
         join Nil r = r
         join l r = Node k' v' l r'
             where
-                k' v' = leftmost r
+                (k', v') = leftmost r
                 r' = delete k' r
-                leftmost (Node k v Nil r) = k v
+                leftmost (Node k v Nil r) = (k, v)
                 leftmost (Node _ _ l _) = leftmost l
 delete _ Nil = Nil
