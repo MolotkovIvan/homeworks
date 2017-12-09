@@ -20,8 +20,7 @@ delete x (Node k v l r)
     | otherwise = join l r
     where
         join l Nil = l
-        join Nil r = r
         join l r = let (k', v') = leftmost r in Node k' v' l (delete k' r)
         leftmost (Node k v Nil _) = (k, v)
-        leftmost (Node _ _ l _) = leftmost l
+        leftmost (Node _ _ l _)   = leftmost l
 delete _ Nil = Nil
