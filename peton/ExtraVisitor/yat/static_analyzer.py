@@ -1,5 +1,3 @@
-from model import *
-
 class PureCheckVisitor:
     def __init__(self):
         self.isPure = True
