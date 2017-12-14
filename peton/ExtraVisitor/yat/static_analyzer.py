@@ -17,11 +17,7 @@ class PureCheckVisitor:
         return True
 
     def visit_conditional(self, conditional):
-        if conditional.condition.accept(self) is False:
-            return False
-        if (check_array(conditional.if_true, self) and check_array(conditional.if_false, self)):
-            return True
-        return False
+        return conditional.condition.accept(self) and check_array(conditional.if_true, self) and check_array(conditional.if_false, self)
 
     def visit_read(self, read):
         return False
@@ -42,7 +38,4 @@ class PureCheckVisitor:
         return unary_operation.expr.accept(self)
 
     def visit_binary_operation(self, binary_operation):
-        if binary_operation.lhs.accept(self) and binary_operation.rhs.accept(self):
-            return True
-        else:
-            return False
+        return binary_operation.lhs.accept(self) and binary_operation.rhs.accept(self):
