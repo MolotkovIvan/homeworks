@@ -38,4 +38,4 @@ class PureCheckVisitor:
         return unary_operation.expr.accept(self)
 
     def visit_binary_operation(self, binary_operation):
-        return binary_operation.lhs.accept(self) and binary_operation.rhs.accept(self):
+        return binary_operation.lhs.accept(self) and binary_operation.rhs.accept(self)
