@@ -56,8 +56,8 @@ class Function:
     def evaluate(self, scope):
         return self
 
-#   def accept(self, visitor):
-#        return visitor.visit_(self)
+    def accept(self, visitor):
+        return visitor.visit_function(self)
 
 
 class FunctionDefinition:

@@ -1,10 +1,14 @@
-class PureCheckVisitor:
-    def __init__(self):
-        self.isPure = True
+def check_array(expressions, visitor):
+    if expressions:
+        for expr in expressions:
+            if not expr.accept(visitor):
+                return False
+    return True
 
+
+class PureCheckVisitor:
     def visit(self, tree):
-        self.isPure = tree.accept(self)
-        print(self.isPure)
+        return tree.accept(self)
 
     def visit_number(self, number):
         return True
@@ -15,16 +19,9 @@ class PureCheckVisitor:
     def visit_conditional(self, conditional):
         if conditional.condition.accept(self) is False:
             return False
-
-        for expr in conditional.if_true:
-            if expr.accept(self) is False:
-                return False
-
-        for expr in conditional.if_false:
-            if expr.accept(self) is False:
-                return False
-
-        return True
+        if (check_array(conditional.if_true, self) and check_array(conditional.if_false, self)):
+            return True
+        return False
 
     def visit_read(self, read):
         return False
@@ -32,15 +29,14 @@ class PureCheckVisitor:
     def visit_print(self, print):
         return False
 
+    def visit_function(self, function):
+        return check_array(function.body, self)
+
     def visit_function_definition(self, function_definition):
-        f = function_definition.function
-        for expr in f.body:
-            if expr.accept(self) is False:
-                return False
-        return True
+        return check_array(function_definition.function.body, self)
 
     def visit_function_call(self, function_call):
-        return True
+        return check_array(function_call.args, self)
 
     def visit_unary_operation(self, unary_operation):
         return unary_operation.expr.accept(self)
