@@ -1,4 +1,4 @@
-SELECT Country.Name, l1.Rate, l1.Year
+SELECT Country.Name, l1.Rate
 FROM Country
 JOIN LiteracyRate AS l1 ON Country.Code = l1.CountryCode
 JOIN LiteracyRate AS lmax ON Country.Code = lmax.CountryCode
