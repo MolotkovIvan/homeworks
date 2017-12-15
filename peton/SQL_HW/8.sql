@@ -1,5 +1,5 @@
---let's assume that every country has its capital (if it has any cities at all)
-SELECT Country.Name, Country.Population, Country.SurfaceArea FROM Country 
+SELECT Country.Name, Country.Population, Country.SurfaceArea
+FROM Country 
 JOIN City AS C1 ON C1.CountryCode = Country.Code
 JOIN City AS C2 ON C2.CountryCode = Country.Code
 JOIN Capital ON Capital.CityId = C2.Id
