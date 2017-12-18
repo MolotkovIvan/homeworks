@@ -18,8 +18,8 @@ class PureCheckVisitor:
 
     def visit_conditional(self, conditional):
         return conditional.condition.accept(self)\
-        and check_array(conditional.if_true, self)\
-        and check_array(conditional.if_false, self)
+           and check_array(conditional.if_true, self)\
+           and check_array(conditional.if_false, self)
 
     def visit_read(self, read):
         return False
@@ -35,11 +35,11 @@ class PureCheckVisitor:
 
     def visit_function_call(self, function_call):
         return check_array(function_call.args, self)\
-        and function_call.fun_expr.accept()
+           and function_call.fun_expr.accept()
 
     def visit_unary_operation(self, unary_operation):
         return unary_operation.expr.accept(self)
 
     def visit_binary_operation(self, binary_operation):
         return binary_operation.lhs.accept(self)\
-        and binary_operation.rhs.accept(self)
+           and binary_operation.rhs.accept(self)
