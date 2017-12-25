@@ -15,3 +15,27 @@ prog2 = Conditional(BinaryOperation(Number(4), "=", Number(5)), [
 ])
 print(PureCheckVisitor().visit(prog1))
 print(PureCheckVisitor().visit(prog2))
+
+prog3 = Conditional(Number(1), [
+    FunctionDefinition("foo", Function([], [
+        Number(123),
+        Conditional(Number(1), [
+            Number(2),
+        ])
+    ])),
+    FunctionDefinition("bar", Function([], [
+        Number(123)
+    ])),
+    FunctionDefinition("baz", Function([], [
+    ])),
+    FunctionDefinition("foobar", Function([], [
+        Conditional(Number(1), [
+            Number(2),
+        ]),
+        Number(123)
+    ])),
+], [Number(123)])
+noreturn = NoReturnValueCheckVisitor()
+print(noreturn.visit(prog3))
+for i in noreturn.bad_functions:
+	print(i)
