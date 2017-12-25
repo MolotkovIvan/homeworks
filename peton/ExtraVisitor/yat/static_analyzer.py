@@ -80,7 +80,7 @@ class NoReturnValueCheckVisitor:
 
     def visit_function_call(self, function_call):
         return (function_call.fun_expr.accept(self) and
-                all(expr.accept(self) for expr in expressions))
+                all(expr.accept(self) for expr in function_call.function.body))
 
     def visit_unary_operation(self, unary_operation):
         unary_operation.expr.accept(self)
