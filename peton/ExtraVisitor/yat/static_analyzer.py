@@ -1,6 +1,6 @@
 class PureCheckVisitor:
     def visit_array(self, expressions):
-        if expressions is None:
+        if not expressions:
             return True
         return all(expr.accept(self) for expr in expressions)
 
@@ -43,9 +43,6 @@ class PureCheckVisitor:
 
 
 class NoReturnValueCheckVisitor:
-    def __init__(self):
-        self.bad_functions = []
-
     def visit_array(self, expressions):
         if not expressions:
             return False
@@ -70,6 +67,7 @@ class NoReturnValueCheckVisitor:
         return True
 
     def visit_print(self, print):
+        print.expr.accept(self)
         return True
 
     def visit_function(self, function):
@@ -77,7 +75,7 @@ class NoReturnValueCheckVisitor:
 
     def visit_function_definition(self, function_definition):
         if not function_definition.function.accept(self):
-            self.bad_functions.append(function_definition.name)
+            print(function_definition.name)
         return True
 
     def visit_function_call(self, function_call):
@@ -85,7 +83,10 @@ class NoReturnValueCheckVisitor:
                 all(expr.accept(self) for expr in expressions))
 
     def visit_unary_operation(self, unary_operation):
+        unary_operation.expr.accept(self)
         return True
 
     def visit_binary_operation(self, binary_operation):
+        binary_operation.lhs.accept(self)
+        binary_operation.rhs.accept(self)
         return True

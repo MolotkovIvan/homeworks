@@ -36,6 +36,4 @@ prog3 = Conditional(Number(1), [
     ])),
 ], [Number(123)])
 noreturn = NoReturnValueCheckVisitor()
-print(noreturn.visit(prog3))
-for i in noreturn.bad_functions:
-	print(i)
+noreturn.visit(prog3)
