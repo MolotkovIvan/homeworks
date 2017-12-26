@@ -43,12 +43,20 @@ class PureCheckVisitor:
 
 
 class NoReturnValueCheckVisitor:
-    def visit_array(self, expressions):
+    def visit_body(self, expressions):
         if not expressions:
             return False
         for expr in expressions:
             expr.accept(self)
         return expressions[-1].accept(self)
+
+    def visit_array(self, expressions):
+        ans = True
+        if expressions:
+            for expr in expressions:
+                if not expr.accept(self):
+                    ans = False
+        return ans
 
     def visit(self, tree):
         return tree.accept(self)
@@ -60,8 +68,8 @@ class NoReturnValueCheckVisitor:
         return True
 
     def visit_conditional(self, conditional):
-        cond1 = self.visit_array(conditional.if_true)
-        cond2 = self.visit_array(conditional.if_false)
+        cond1 = self.visit_body(conditional.if_true)
+        cond2 = self.visit_body(conditional.if_false)
         conditional.condition.accept(self)
         return cond1 and cond2
 
@@ -73,7 +81,7 @@ class NoReturnValueCheckVisitor:
         return True
 
     def visit_function(self, function):
-        return self.visit_array(function.body)
+        return self.visit_body(function.body)
 
     def visit_function_definition(self, function_definition):
         if not function_definition.function.accept(self):
