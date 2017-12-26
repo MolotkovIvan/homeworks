@@ -60,8 +60,10 @@ class NoReturnValueCheckVisitor:
         return True
 
     def visit_conditional(self, conditional):
-        return (self.visit_array(conditional.if_true) and
-                self.visit_array(conditional.if_false))
+        cond1 = self.visit_array(conditional.if_true)
+        cond2 = self.visit_array(conditional.if_false)
+        conditional.condition.accept(self)
+        return cond1 and cond2
 
     def visit_read(self, read):
         return True
@@ -79,8 +81,9 @@ class NoReturnValueCheckVisitor:
         return True
 
     def visit_function_call(self, function_call):
-        return (function_call.fun_expr.accept(self) and
-                all(expr.accept(self) for expr in function_call.args))
+        cond1 = function_call.fun_expr.accept(self)
+        cond2 = self.visit_array(function_call.args)
+        return cond1 and cond2
 
     def visit_unary_operation(self, unary_operation):
         unary_operation.expr.accept(self)
