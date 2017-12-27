@@ -44,11 +44,10 @@ class PureCheckVisitor:
 
 class NoReturnValueCheckVisitor:
     def visit_body(self, expressions):
-        if not expressions:
-            return False
-        for expr in expressions:
-            expr.accept(self)
-        return expressions[-1].accept(self)
+        ans = False
+        for expr in expressions or []:
+            ans = expr.accept(self)
+        return ans
 
     def visit_function_arguments(self, expressions):
         ans = True
