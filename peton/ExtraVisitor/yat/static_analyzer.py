@@ -50,12 +50,11 @@ class NoReturnValueCheckVisitor:
             expr.accept(self)
         return expressions[-1].accept(self)
 
-    def visit_array(self, expressions):
+    def visit_function_arguments(self, expressions):
         ans = True
-        if expressions:
-            for expr in expressions:
-                if not expr.accept(self):
-                    ans = False
+        for expr in expressions:
+            if not expr.accept(self):
+                ans = False
         return ans
 
     def visit(self, tree):
@@ -90,7 +89,7 @@ class NoReturnValueCheckVisitor:
 
     def visit_function_call(self, function_call):
         cond1 = function_call.fun_expr.accept(self)
-        cond2 = self.visit_array(function_call.args)
+        cond2 = self.visit_function_arguments(function_call.args)
         return cond1 and cond2
 
     def visit_unary_operation(self, unary_operation):
