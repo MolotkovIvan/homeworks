@@ -62,7 +62,6 @@ void* invoke(void* pool) {
 		};
 
 		if (!p->tasks.empty() && !p->end) {
-			std::cout << "1\n";
 			Task t = p->tasks.front();
 			pthread_mutex_lock(&t.m);
 			p->tasks.pop();
