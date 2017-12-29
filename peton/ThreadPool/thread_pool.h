@@ -17,8 +17,8 @@ struct ThreadPool {
     pthread_mutex_t mutex;     
     std::vector<pthread_t> threads;
     std::queue<Task*> tasks;
-    pthread_cond_t finit;
     pthread_cond_t new_task;
+    pthread_cond_t task_is_done;
     unsigned active_threads;
 };
 
