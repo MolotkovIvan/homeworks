@@ -59,13 +59,13 @@ void* invoke(void* const pool) {
 	ThreadPool* p = (ThreadPool*)pool;
 	while(true) {
 		pthread_mutex_lock(&p->mutex);
-		while (p->tasks.empty()) {
+		while (p->tasks.empty() && !p->end_threads) {
 			pthread_cond_wait(&p->new_task, &p->mutex);
-			if (p->end_threads && p->tasks.empty()) {
-				pthread_mutex_unlock(&p->mutex);
-				return NULL;
-			}
 		};
+		if (p->tasks.empty() && p->end_threads) {
+			pthread_mutex_unlock(&p->mutex);
+			return NULL;
+		}
 		if (!p->tasks.empty()) {
 			Task *t = p->tasks.front();
 			pthread_mutex_lock(&t->m);
