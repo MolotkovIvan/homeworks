@@ -11,7 +11,8 @@ void thpool_init(ThreadPool* const pool, unsigned threads_nm) {
 	pthread_mutex_init(&pool->mutex, NULL);
 	pthread_cond_init(&pool->new_task, NULL);
 	pthread_cond_init(&pool->task_is_done, NULL);
-	pool->end = false;
+	pool->end_queue = false;
+	pool->end_threads = false;
 	pool->active_threads = threads_nm;
 	for (unsigned i = 0; i < threads_nm; i++) {
 		pthread_t id;
@@ -25,7 +26,7 @@ void thpool_submit(ThreadPool* const pool, struct Task* const task) {
 	pthread_cond_init(&task->iscompleted_cond, NULL);
 	
 	pthread_mutex_lock(&pool->mutex);
-	if (!pool->end) {
+	if (!pool->end_queue) {
 		pool->tasks.push(task);
 	}
 	pthread_mutex_unlock(&pool->mutex); 
@@ -50,14 +51,12 @@ void thpool_wait(struct Task* const task) {
 void thpool_finit(ThreadPool* const pool) {
 //	std::cout << "1 finit\n";
 	pthread_mutex_lock(&pool->mutex); 
-	pool->end = true;
-	pthread_mutex_unlock(&pool->mutex);
-//	std::cout << "2 finit\n";
+	pool->end_queue = true;
 	while (pool->tasks.size() != 0) {
-		pthread_mutex_lock(&pool->mutex); 
 		pthread_cond_wait(&pool->task_is_done, &pool->mutex);
-		pthread_mutex_unlock(&pool->mutex); 
 	}
+	pool->end_threads = true;
+	pthread_mutex_unlock(&pool->mutex);
 	pthread_cond_broadcast(&pool->new_task);
 	for (int i = 0; i < pool->threads.size(); i++) {
 //		std::cout << "3 finit\n";
@@ -75,15 +74,15 @@ void* invoke(void* const pool) {
 	ThreadPool* p = (ThreadPool*)pool;
 	while(true) {
 		pthread_mutex_lock(&p->mutex);
-		while (p->tasks.empty() || p->end) {
-			if (p->end) {
+		while (p->tasks.empty() || p->end_threads) {
+			if (p->end_threads) {
 				pthread_cond_signal(&p->task_is_done);
 				pthread_mutex_unlock(&p->mutex);
 				return NULL;
 			}
 			pthread_cond_wait(&p->new_task, &p->mutex);
 		};
-		if (!p->tasks.empty() && !p->end) {
+		if (!p->tasks.empty() && !p->end_threads) {
 			Task *t = p->tasks.front();
 			pthread_mutex_lock(&t->m);
 			p->tasks.pop();

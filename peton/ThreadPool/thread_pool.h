@@ -13,7 +13,8 @@ struct Task {
 };
 
 struct ThreadPool {
-	bool end;
+	bool end_queue;
+    bool end_threads;
     pthread_mutex_t mutex;     
     std::vector<pthread_t> threads;
     std::queue<Task*> tasks;
