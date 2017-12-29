@@ -10,10 +10,7 @@ void func(void*);
 void thpool_init(ThreadPool* const pool, unsigned threads_nm) {
 	pthread_mutex_init(&pool->mutex, NULL);
 	pthread_cond_init(&pool->new_task, NULL);
-	pthread_cond_init(&pool->task_is_done, NULL);
-	pool->end_queue = false;
 	pool->end_threads = false;
-	pool->active_threads = threads_nm;
 	for (unsigned i = 0; i < threads_nm; i++) {
 		pthread_t id;
 		pool->threads.push_back(id); 
@@ -26,48 +23,34 @@ void thpool_submit(ThreadPool* const pool, struct Task* const task) {
 	pthread_cond_init(&task->iscompleted_cond, NULL);
 	
 	pthread_mutex_lock(&pool->mutex);
-	if (!pool->end_queue) {
-		pool->tasks.push(task);
-	}
+	pool->tasks.push(task);
 	pthread_mutex_unlock(&pool->mutex); 
 	
 	pthread_cond_signal(&pool->new_task);
 }
 
 void thpool_wait(struct Task* const task) {
-//	std::cout << "1 wait\n";
 	pthread_mutex_lock(&task->m);	
 	while (!task->iscompleted_bool) { 
-//		std::cout << "2 wait\n";
 		pthread_cond_wait(&task->iscompleted_cond, &task->m);
 	}
 	pthread_mutex_unlock(&task->m);	
 
 	pthread_mutex_destroy(&task->m);
 	pthread_cond_destroy(&task->iscompleted_cond);
-//	std::cout << "3 wait\n";
 }
 
 void thpool_finit(ThreadPool* const pool) {
-//	std::cout << "1 finit\n";
 	pthread_mutex_lock(&pool->mutex); 
-	pool->end_queue = true;
-	while (pool->tasks.size() != 0) {
-		pthread_cond_wait(&pool->task_is_done, &pool->mutex);
-	}
 	pool->end_threads = true;
 	pthread_mutex_unlock(&pool->mutex);
 	pthread_cond_broadcast(&pool->new_task);
 	for (int i = 0; i < pool->threads.size(); i++) {
-//		std::cout << "3 finit\n";
 		pthread_join(pool->threads[i], NULL);
-//		std::cout << "4 finit\n";
 	}	
 	
 	pthread_mutex_destroy(&pool->mutex);
 	pthread_cond_destroy(&pool->new_task);
-	pthread_cond_destroy(&pool->task_is_done);
-//	std::cout << "5 finit\n";
 }
 
 void* invoke(void* const pool) {
@@ -76,13 +59,12 @@ void* invoke(void* const pool) {
 		pthread_mutex_lock(&p->mutex);
 		while (p->tasks.empty() || p->end_threads) {
 			if (p->end_threads) {
-				pthread_cond_signal(&p->task_is_done);
 				pthread_mutex_unlock(&p->mutex);
 				return NULL;
 			}
 			pthread_cond_wait(&p->new_task, &p->mutex);
 		};
-		if (!p->tasks.empty() && !p->end_threads) {
+		while (!p->tasks.empty()) {
 			Task *t = p->tasks.front();
 			pthread_mutex_lock(&t->m);
 			p->tasks.pop();

@@ -13,14 +13,11 @@ struct Task {
 };
 
 struct ThreadPool {
-	bool end_queue;
     bool end_threads;
     pthread_mutex_t mutex;     
     std::vector<pthread_t> threads;
     std::queue<Task*> tasks;
     pthread_cond_t new_task;
-    pthread_cond_t task_is_done;
-    unsigned active_threads;
 };
 
 void thpool_init(ThreadPool* pool, unsigned threads_nm);
