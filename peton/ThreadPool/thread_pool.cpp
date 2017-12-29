@@ -23,7 +23,9 @@ void thpool_submit(ThreadPool* const pool, struct Task* const task) {
 	pthread_cond_init(&task->iscompleted_cond, NULL);
 	
 	pthread_mutex_lock(&pool->mutex);
-	pool->tasks.push(task);
+	if (!pool->end_threads) {
+		pool->tasks.push(task);
+	}
 	pthread_mutex_unlock(&pool->mutex); 
 	
 	pthread_cond_signal(&pool->new_task);
@@ -59,7 +61,7 @@ void* invoke(void* const pool) {
 		pthread_mutex_lock(&p->mutex);
 		while (p->tasks.empty()) {
 			pthread_cond_wait(&p->new_task, &p->mutex);
-			if (p->end_threads) {
+			if (p->end_threads && p->tasks.empty()) {
 				pthread_mutex_unlock(&p->mutex);
 				return NULL;
 			}
