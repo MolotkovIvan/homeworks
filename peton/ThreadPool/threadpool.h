@@ -7,17 +7,17 @@ struct Task {
     void (*f)(void*);
     void* arg;
     pthread_mutex_t m;
-    pthread_cond_t is_completed;
+    
+    pthread_cond_t iscompleted_cond;
+    bool iscompleted_bool;
 };
 
 struct ThreadPool {
-	unsigned active_threads;
 	bool end;
-	pthread_mutex_t m_end;
     pthread_mutex_t mutex;     
-    pthread_cond_t cond;    
     std::vector<pthread_t> threads;
     std::queue<Task> tasks;
+    pthread_cond_t new_task;
 };
 
 void thpool_init(ThreadPool* pool, unsigned threads_nm);
