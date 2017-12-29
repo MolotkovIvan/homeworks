@@ -16,8 +16,10 @@ struct ThreadPool {
 	bool end;
     pthread_mutex_t mutex;     
     std::vector<pthread_t> threads;
-    std::queue<Task> tasks;
+    std::queue<Task*> tasks;
+    pthread_cond_t finit;
     pthread_cond_t new_task;
+    unsigned active_threads;
 };
 
 void thpool_init(ThreadPool* pool, unsigned threads_nm);
